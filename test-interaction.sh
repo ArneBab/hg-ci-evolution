@@ -39,7 +39,10 @@ for i in dev1 dev2; do
     (cd $i; echo -e "[extensions]\nevolve =\nrebase =\n[ui]\nusername = $i\nmerge-tool = internal:merge-local[phase]publish = False" >> .hg/hgrc)    
 done
 
-echo "basic interaction: dev1 works, dev2 works, dev1 pushes"
+
+
+
+echo "basic interaction: dev1 works, dev1 pushes"
 (cd dev1; echo abc > testfile; hg ci -A -m abc; hg push; hg log --graph)
 
 echo "jenkins checks the changes, accepts them."
@@ -56,7 +59,7 @@ echo "for this prototype let’s just assume that the commit failed to build"
 (cd jenkins; for i in $(tac unprocessed_commits.log); do hg prune -r $i && (echo "to dev2: commit $i was contained in a failing build. It has been pruned. Please graft and fix it and push again." && echo $i >> ../dev2/failing_commits.log); hg evolve; done; hg log --graph)
 
 echo "dev1 pushes, has to rebase"
-(cd dev1; hg push || hg pull --rebase ; hg log --graph)
+(cd dev1; hg pull; hg log --graph; hg push || hg pull --rebase ; hg log --graph)
 
 echo "dev2 does some more work and tries to push, but since the bad commits leading to the good change from dev1 were removed, this would push orphan changesets, so the push fails."
 (cd dev2; echo efg > foo; hg ci -A -m efg; hg pull --rebase; hg push; hg log --graph)
