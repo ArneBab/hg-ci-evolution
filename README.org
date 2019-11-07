@@ -1,0 +1,5 @@
+#+title: Hg CI Evolution
+
+More efficient continuous integration with Mercurial and the evolve extension.
+
+Created at and for https://www.disy.net
